@@ -3,16 +3,21 @@ import torch
 torch.manual_seed(2023)
 
 
-def activation_func(x):
+def activation_func(x, func = "ReLU"):
     #TODO Implement one of these following activation function: sigmoid, tanh, ReLU, leaky ReLU
     epsilon = 0.01   # Only use this variable if you choose Leaky ReLU
-    result = None
-    return result
-
+    if func == "sigmoid":
+        return 1/(1+torch.exp(-x))
+    # elif func == "tanh":
+    #     return torch.tanh(x)
+    # elif func == "ReLU":
+    #     return torch.maximum()
+    else:
+        raise ValueError ("ham kich hoat khong dung")
+   
 def softmax(x):
-    # TODO Implement softmax function here
-    result = None
-    return result
+    exp_x = torch.exp(x - torch.max(x))
+    return exp_x / exp_x.sum(keepdim=True)
 
 
 # Define the size of each layer in the network
@@ -39,7 +44,8 @@ B2 = torch.randn((1, num_hidden_2))
 B3 = torch.randn((1, num_hidden_3))
 B4 = torch.randn((1, num_classes))
 
-#TODO Calculate forward pass of the network here. Result should have the shape of [1,10]
-# Dont forget to check if sum of result = 1.0
 result = None
 print(result)
+
+# tensor([[0., 0., 0., 1., 0., 0., 0., 0., 0., 0.]])
+# Tổng : 1.0
