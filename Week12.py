@@ -3,22 +3,22 @@ import torch
 torch.manual_seed(2023)
 
 
-def activation_func(x, func = "ReLU"):
-    #TODO Implement one of these following activation function: sigmoid, tanh, ReLU, leaky ReLU
-    epsilon = 0.01   # Only use this variable if you choose Leaky ReLU
+def activation_func(x, func):
+    epsilon = 0.01  
     if func == "sigmoid":
-        return 1/(1+torch.exp(-x))
-    # elif func == "tanh":
-    #     return torch.tanh(x)
-    # elif func == "ReLU":
-    #     return torch.maximum()
+        return 1 / (1 + torch.exp(-x))
+    elif func == "tanh":
+        return torch.tanh(x)
+    elif func == "ReLU":
+        return torch.maximum(torch.tensor(0.0), x)
+    elif func == "leaky_ReLU":
+        return torch.where(x > 0, x, epsilon * x)
     else:
-        raise ValueError ("ham kich hoat khong dung")
-   
+        raise ValueError("Hàm kích hoạt không hợp lệ")
+    
 def softmax(x):
-    exp_x = torch.exp(x - torch.max(x))
-    return exp_x / exp_x.sum(keepdim=True)
-
+   exp_x = torch.exp(x - torch.max(x))  
+   return exp_x / exp_x.sum(dim=1, keepdim=True)
 
 # Define the size of each layer in the network
 num_input = 784  # Number of node in input layer (28x28)
@@ -44,8 +44,14 @@ B2 = torch.randn((1, num_hidden_2))
 B3 = torch.randn((1, num_hidden_3))
 B4 = torch.randn((1, num_classes))
 
-result = None
+hidden_1 = activation_func(torch.matmul(input_data, W1) + B1, func="ReLU")  
+hidden_2 = activation_func(torch.matmul(hidden_1, W2) + B2, func="ReLU")  
+hidden_3 = activation_func(torch.matmul(hidden_2, W3) + B3, func="ReLU")  
+output = torch.matmul(hidden_3, W4) + B4  
+result = softmax(output)  
+
 print(result)
+print("Tổng :", result.sum().item())
 
 # tensor([[0., 0., 0., 1., 0., 0., 0., 0., 0., 0.]])
 # Tổng : 1.0
